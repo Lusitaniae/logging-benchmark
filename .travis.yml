@@ -1,0 +1,18 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - sudo apt-get install apache2-utils # provides the benchmark tool
+
+  - docker pull bryanlatten/docker-php:7.1
+  - docker pull litaio/redis:latest
+
+  - docker build -t test_instance .
+
+  - docker run -d --name redis litaio/redis
+  - docker run --link redis:redis -d -p 8080:8080 test_instance
+
+
+script:
+  - ./benchmark.sh
