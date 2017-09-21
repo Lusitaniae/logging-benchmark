@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Run benchmark test at multiple levels of concurrency
 # and compare results
 
