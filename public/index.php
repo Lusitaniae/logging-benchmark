@@ -9,7 +9,6 @@ define('MILISECOND', 1000);
 include 'class.RedisBuffer.php';
 include 'class.FileLogger.php';
 
-
 if(isset($_GET) && count($_GET) === 2)
 {
     $driver = $_GET['driver'];
@@ -30,12 +29,14 @@ function run_benchmark($driver, $nr_tasks)
       # simulate random task
       usleep(MILISECOND);
       $request_id = uniqid('bench-job', true);
-      log_message($driver, 'Task run with success. Request id: ' . $request_id );
+      log_message($driver, 'task run with success. Request id: ' . $request_id );
    }
 }
 
 function log_message($driver, $message)
 {
+    $message = date("Y-m-d H:i:s") . " 127.0.0.1 job " . $message;
+
     if ($driver == 'redis') {
         log_redis($message);
     } else {

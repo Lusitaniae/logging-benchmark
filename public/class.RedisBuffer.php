@@ -2,26 +2,36 @@
 
 class RedisBuffer {
 
-  const BUFFERKEY = "log_buffer";
+  private const BUFFERKEY = "log_buffer";
 
+  /*
+  * Fetch Redis connection
+  */
   private static function get_connection()
   {
       $redis = new Redis();
       // support for docker linked instance
       $redis_host = getenv('REDIS_PORT_6379_TCP_ADDR');
-      $redis_host = ($redis_host) ?: '127.0.0.1';
+      $redis_host = ($redis_host) ? $redis_host : '127.0.0.1';
       $redis->pconnect($redis_host, 6379);
       return $redis;
   }
 
-  public static function append($message)
+  /*
+  * Append message to Redis Queue.
+  */
+  public static function append(String $message)
   {
       $redis = self::get_connection();
       $status =  $redis->rPush(self::BUFFERKEY, $message);
       return $status;
   }
 
-  public static function fetch($number_messages)
+  /*
+  * Fetch and remove a number of messages from Redis Queue.
+  * Equivelent to calling pop n times.
+  */
+  public static function fetch(int $number_messages)
   {
       $redis = self::get_connection();
       $buffer = [];
